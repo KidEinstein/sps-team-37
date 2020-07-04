@@ -2,17 +2,24 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>My Portfolio</title>
+    <title>Webapp</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
   <body>
     <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
+
+      <h1>Our webapp</h1>
+      <p>This is our webapp.</p>
+      <p>Click here to write a journal entry:</p>
+
+      <form action= "/my-data-url" id="my-form" method="POST" enctype="multipart/form-data">
+        <p>Enter your mood on a scale from 1-10:</p>
+        <input type="number" name="mood" min="1" max="10" value="1">
+        <br/><br/>
+        <input type="submit" />
+      </form>
+
     </div>
   </body>
 </html>
