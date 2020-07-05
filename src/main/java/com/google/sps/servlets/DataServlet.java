@@ -14,19 +14,42 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
+/** Servlet that stores journal entry data from the html form into Datastore*/
+@WebServlet("/my-data-url")
 public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html;");
     response.getWriter().println("<h1>Hello world!</h1>");
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get the input from the form.
+    String moodScaleString = request.getParameter("mood");
+
+    // Convert the mood input to an int.
+    int moodScale = Integer.parseInt(moodScaleString);
+ 
+    //Create journal entity with mood, journal entry, and song properties
+    Entity journalEntity = new Entity("Journal");
+    journalEntity.setProperty("mood-scale", moodScale);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(journalEntity);
+
+    // Redirect back to the HTML page.
+    response.sendRedirect("/index.html");
   }
 }
