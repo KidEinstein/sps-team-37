@@ -38,13 +38,15 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from the form.
     String moodScaleString = request.getParameter("mood");
-
+    String songEntryString = request.getParameter("song");
+    System.out.println(songEntryString);
     // Convert the mood input to an int.
     int moodScale = Integer.parseInt(moodScaleString);
  
     //Create journal entity with mood, journal entry, and song properties
     Entity journalEntity = new Entity("Journal");
     journalEntity.setProperty("mood-scale", moodScale);
+    journalEntity.setProperty("song", songEntryString);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(journalEntity);
