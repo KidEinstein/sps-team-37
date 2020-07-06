@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Webapp</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <div id="content">
+
+      <h1>Our webapp</h1>
+      <p>This is our webapp.</p>
+      <p>Click <a href="graphs.html">here</a> to see a graph containing the previous mood data.</p>
+      <p>Click here to write a journal entry:</p>
+
+      <form action="/my-data-url" method="POST">
+        <p>Enter your mood on a scale from 1-10:</p>
+        <input type="number" name="mood" min="1" max="10" value="1">
+        <br/><br/>
+        <input type="submit"/>
+      </form>
+
+    </div>
+  </body>
+</html>

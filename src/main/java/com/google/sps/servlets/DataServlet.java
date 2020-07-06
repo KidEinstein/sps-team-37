@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that stores journal entry data from the html form into Datastore*/
+/** Servlet that stores journal entry data from the html form into Datastore */
 @WebServlet("/my-data-url")
 public class DataServlet extends HttpServlet {
 
