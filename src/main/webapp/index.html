@@ -11,9 +11,10 @@
 
       <h1>Our webapp</h1>
       <p>This is our webapp.</p>
-      <p>Click here to write a journal entry:</p>
 
       <form action="/my-data-url" method="POST">
+        <p>Enter your journal entry for the day:</p>
+        <textarea name="text-entry" maxlength="300" rows="4" cols="50" placeholder="How was your day?" required></textarea>
         <p>Choose a song for the day:</p>
         <select name="song">
           <option value="I Gotta Feeling">"I Gotta Feeling" by The Black Eyed Peas</option>

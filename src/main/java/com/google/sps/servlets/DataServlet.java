@@ -37,20 +37,25 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from the form.
-    String moodScaleString = request.getParameter("mood");
+    String textEntryString = request.getParameter("text-entry");
     String songEntryString = request.getParameter("song");
+    String moodScaleString = request.getParameter("mood");
 
-    // Convert the mood input to an int.
-    int moodScale = Integer.parseInt(moodScaleString);
- 
-    //Create journal entity with mood, journal entry, and song properties
-    Entity journalEntity = new Entity("Journal");
-    journalEntity.setProperty("mood-scale", moodScale);
-    journalEntity.setProperty("song", songEntryString);
+    // Ensure that form is filled out before saving to datastore
+    if (textEntryString != null && !textEntryString.isEmpty()) {
+      // Convert the mood input to an int.
+      int moodScale = Integer.parseInt(moodScaleString);
+  
+      //Create journal entity with mood, journal entry, and song properties
+      Entity journalEntity = new Entity("Journal");
+      journalEntity.setProperty("text-entry", textEntryString);
+      journalEntity.setProperty("song", songEntryString);
+      journalEntity.setProperty("mood-scale", moodScale);
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(journalEntity);
-
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(journalEntity);
+    }
+    
     // Redirect back to the HTML page.
     response.sendRedirect("/index.html");
   }
