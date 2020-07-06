@@ -39,7 +39,7 @@ public class DataServlet extends HttpServlet {
     // Get the input from the form.
     String moodScaleString = request.getParameter("mood");
     String songEntryString = request.getParameter("song");
-    System.out.println(songEntryString);
+
     // Convert the mood input to an int.
     int moodScale = Integer.parseInt(moodScaleString);
  
