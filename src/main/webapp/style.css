@@ -7,3 +7,8 @@
 #greeting-container {
   margin-top: 20px;
 }
+
+#graph-div {
+    width: 50%;
+    height: 100%;
+}

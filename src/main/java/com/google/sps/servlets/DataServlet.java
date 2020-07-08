@@ -34,12 +34,14 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/my-data-url")
 public class DataServlet extends HttpServlet {
 
-  ArrayList<Journal> journalArrayList = new ArrayList<Journal>();
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Datastore query for journal entries ordered by time in descending order. 
-    Query journalQuery = new Query("Journal").addSort("timestamp", SortDirection.DESCENDING);
+    
+    // An ArrayList to store Journal objects. 
+    ArrayList<Journal> journalArrayList = new ArrayList<Journal>();
+
+    // Datastore query for journal entries ordered by time in ascending order. 
+    Query journalQuery = new Query("Journal").addSort("timestamp", SortDirection.ASCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery journalResults = datastore.prepare(journalQuery);
     
