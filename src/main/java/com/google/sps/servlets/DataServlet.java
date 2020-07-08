@@ -39,6 +39,8 @@ public class DataServlet extends HttpServlet {
     // Get the input from the form.
     String textEntryString = request.getParameter("text-entry");
     String moodScaleString = request.getParameter("mood");
+    String songEntryString = request.getParameter("song");
+    String artistEntryString = request.getParameter("artist");
 
     // Ensure that form is filled out before saving to datastore
     if (textEntryString != null && !textEntryString.isEmpty()) {
@@ -49,6 +51,8 @@ public class DataServlet extends HttpServlet {
       Entity journalEntity = new Entity("Journal");
       journalEntity.setProperty("text-entry", textEntryString);
       journalEntity.setProperty("mood-scale", moodScale);
+      journalEntity.setProperty("song", songEntryString);
+      journalEntity.setProperty("artist", artistEntryString);
 
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(journalEntity);
