@@ -66,6 +66,8 @@ public class DataServlet extends HttpServlet {
     String textEntryString = request.getParameter("text-entry");
     String songEntryString = request.getParameter("song");
     String moodScaleString = request.getParameter("mood");
+    String songEntryString = request.getParameter("song");
+    String artistEntryString = request.getParameter("artist");
     long timestamp = System.currentTimeMillis();
 
     // Ensure that form is filled out before saving to datastore
@@ -78,6 +80,8 @@ public class DataServlet extends HttpServlet {
       journalEntity.setProperty("text-entry", textEntryString);
       journalEntity.setProperty("song", songEntryString);
       journalEntity.setProperty("mood-scale", moodScale);
+      journalEntity.setProperty("song", songEntryString);
+      journalEntity.setProperty("artist", artistEntryString);
       journalEntity.setProperty("timestamp", timestamp);
 
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
