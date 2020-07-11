@@ -47,9 +47,13 @@ public class DataServlet extends HttpServlet {
     
     // Loop through the queried results and create a Journal object to add to an ArrayList. 
     for (Entity journalEntity : journalResults.asIterable()) {
-        long moodValue = (long) journalEntity.getProperty("mood-scale");
+        String textEntry = (String) journalEntity.getProperty("text");
+        long moodValue = (long) journalEntity.getProperty("mood");
+        String songTitle = (String) journalEntity.getProperty("song");
+        String artistName = (String) journalEntity.getProperty("artist");
         long timestamp = (long) journalEntity.getProperty("timestamp");
-        Journal journal = new Journal(moodValue, timestamp);
+
+        Journal journal = new Journal(textEntry, moodValue, songTitle, artistName, timestamp);
         journalArrayList.add(journal);
     }
 
@@ -63,7 +67,7 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input and time from the form.
-    String textEntryString = request.getParameter("text-entry");
+    String textEntryString = request.getParameter("text");
     String moodScaleString = request.getParameter("mood");
     String songEntryString = request.getParameter("song");
     String artistEntryString = request.getParameter("artist");
@@ -76,8 +80,8 @@ public class DataServlet extends HttpServlet {
   
       //Create journal entity with mood, journal entry, and song properties
       Entity journalEntity = new Entity("Journal");
-      journalEntity.setProperty("text-entry", textEntryString);
-      journalEntity.setProperty("mood-scale", moodScale);
+      journalEntity.setProperty("text", textEntryString);
+      journalEntity.setProperty("mood", moodScale);
       journalEntity.setProperty("song", songEntryString);
       journalEntity.setProperty("artist", artistEntryString);
       journalEntity.setProperty("timestamp", timestamp);
