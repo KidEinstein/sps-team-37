@@ -17,8 +17,14 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.gson.Gson;
+import com.google.sps.data.Journal;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,17 +36,39 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello world!</h1>");
+    
+    // An ArrayList to store Journal objects. 
+    ArrayList<Journal> journalArrayList = new ArrayList<Journal>();
+
+    // Datastore query for journal entries ordered by time in ascending order. 
+    Query journalQuery = new Query("Journal").addSort("timestamp", SortDirection.ASCENDING);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery journalResults = datastore.prepare(journalQuery);
+    
+    // Loop through the queried results and create a Journal object to add to an ArrayList. 
+    for (Entity journalEntity : journalResults.asIterable()) {
+        long moodValue = (long) journalEntity.getProperty("mood-scale");
+        long timestamp = (long) journalEntity.getProperty("timestamp");
+        Journal journal = new Journal(moodValue, timestamp);
+        journalArrayList.add(journal);
+    }
+
+    // Convert the ArrayList of Journals into JSON format. 
+    response.setContentType("application/json");
+    Gson gson = new Gson();
+    String journalJson = gson.toJson(journalArrayList);
+    response.getWriter().println(journalJson);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the input from the form.
+    // Get the input and time from the form.
     String textEntryString = request.getParameter("text-entry");
+    String songEntryString = request.getParameter("song");
     String moodScaleString = request.getParameter("mood");
     String songEntryString = request.getParameter("song");
     String artistEntryString = request.getParameter("artist");
+    long timestamp = System.currentTimeMillis();
 
     // Ensure that form is filled out before saving to datastore
     if (textEntryString != null && !textEntryString.isEmpty()) {
@@ -50,9 +78,11 @@ public class DataServlet extends HttpServlet {
       //Create journal entity with mood, journal entry, and song properties
       Entity journalEntity = new Entity("Journal");
       journalEntity.setProperty("text-entry", textEntryString);
+      journalEntity.setProperty("song", songEntryString);
       journalEntity.setProperty("mood-scale", moodScale);
       journalEntity.setProperty("song", songEntryString);
       journalEntity.setProperty("artist", artistEntryString);
+      journalEntity.setProperty("timestamp", timestamp);
 
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(journalEntity);
