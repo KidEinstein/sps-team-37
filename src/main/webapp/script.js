@@ -27,6 +27,7 @@ function addRandomQuote() {
 
 
 function getLyrics() {
+  document.getElementById('error-lyric').innerHTML = '';
   // Gets value from inputs and sets them
   var artist = document.getElementById('artist').value;
   var song = document.getElementById('song').value;
@@ -40,10 +41,11 @@ function getLyrics() {
       // API will return two key values, error (if not found), 
       // or lyrics (if found, but could possibly return empty string)
       obj = JSON.parse(lyricsJSON);
-      if (obj.lyrics) {
+      if (obj.lyrics || obj.lyrics == '' || obj.lyrics == null) {
         console.log(obj.lyrics);
       } else {
         console.log(obj.error);
+        document.getElementById('error-lyric').innerHTML = 'Could not find song. Check spelling, or choose another song.';
       }
     }
   };
