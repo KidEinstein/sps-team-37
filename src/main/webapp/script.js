@@ -17,10 +17,36 @@
  */
 function addRandomQuote() {
     // Fetch a quote from the QuoteServlet
-    fetch("/quotes").then(request => request.json()).then((quote_data) => {
+    fetch('/quotes').then(request => request.json()).then((quote_data) => {
         var quote = quote_data;
         // Add it to the page.
         const quoteContainer = document.getElementById('quote-container');
         quoteContainer.innerText = quote;
     });
+}var request = new XMLHttpRequest();
+
+
+function getLyrics() {
+  // Gets value from inputs and sets them
+  var artist = document.getElementById('artist').value;
+  var song = document.getElementById('song').value;
+  var obj;
+  // Calls lyrics.ovh API
+  request.open('GET', 'https://api.lyrics.ovh/v1/' + artist+ '/' + song);
+  // Returns lyrics in JSON format
+  request.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      var lyricsJSON = this.responseText;
+      // API will return two key values, error (if not found), 
+      // or lyrics (if found, but could possibly return empty string)
+      obj = JSON.parse(lyricsJSON);
+      if (obj.lyrics) {
+        console.log(obj.lyrics);
+      } else {
+        console.log(obj.error);
+      }
+    }
+  };
+  // Sends the request for lyrics
+  request.send();
 }
