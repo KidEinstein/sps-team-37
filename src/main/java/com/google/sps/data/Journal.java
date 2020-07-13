@@ -1,7 +1,7 @@
 
 package com.google.sps.data;
 
-/** A Journal object containing the mood value and time. */
+/** A Journal object containing the text, mood value, song, artist, and time. */
 public final class Journal {
 
   private final String textEntry;

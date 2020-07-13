@@ -40,9 +40,9 @@ function addPastEntries() {
   fetch('/my-data-url').then(response => response.json()).then((pastEntries) => {
     // Convert message JSON array to HTML elements then add to page
     const pastEntriesListElement = document.getElementById('past-entries-container');
-    for(var i = 0; i < pastEntries.length; i++) {
-          pastEntriesListElement.appendChild(createEntryElement(pastEntries[i]));
-        }
+    for(var i = pastEntries.length-1; i >= 0; i--) {
+      pastEntriesListElement.appendChild(createEntryElement(pastEntries[i]));
+    }
   });
 }
 
@@ -51,27 +51,26 @@ function createEntryElement(entry) {
   const entryElement = document.createElement('div');
   entryElement.setAttribute("class", "entry");
 
+  const timestampElement = document.createElement('div');
+  timestampElement.setAttribute("class", "entry-timestamp");
+  timestampElement.innerText = getTimeAgo(entry.timestamp);
+
   const textElement = document.createElement('div');
   textElement.setAttribute("class", "entry-text");
   textElement.innerText = "Entry: " + entry.textEntry;
 
   const moodElement = document.createElement('div');
   moodElement.setAttribute("class", "entry-mood");
-  moodElement.innerText = "MoodValue: " + entry.moodValue;
+  moodElement.innerText = "Mood Rating: " + entry.moodValue;
 
   const songElement = document.createElement('div');
   songElement.setAttribute("class", "entry-song");
   songElement.innerText = "Song: " + entry.songTitle + " by " + entry.artistName;
 
-  const timestampElement = document.createElement('div');
-  timestampElement.setAttribute("class", "entry-timestamp");
-  timestampElement.innerText = getTimeAgo(entry.timestamp);
-
-
+  entryElement.appendChild(timestampElement);
   entryElement.appendChild(textElement);
   entryElement.appendChild(moodElement);
   entryElement.appendChild(songElement);
-  entryElement.appendChild(timestampElement);
   entryElement.appendChild(document.createElement('br'));
   
   return entryElement;
