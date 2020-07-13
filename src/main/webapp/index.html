@@ -22,7 +22,8 @@
 
       <h3>Journal</h3>
       <hr/>
-      <form action="/my-data-url" method="POST">
+      <!--onSubmit= "return getLyrics()"-->
+      <form id="form" onSubmit="return getLyrics()" action="/my-data-url" method="POST">
         <p>Enter your journal entry for the day:</p>
         <textarea name="text-entry" maxlength="300" rows="4" cols="50" placeholder="How was your day?" required></textarea>
         <p>Enter a song name</p>
@@ -33,7 +34,7 @@
         <input type="number" name="mood" min="1" max="10" value="1">
         <p id="error-lyric"></p>
         <br/><br/>
-        <input onclick="getLyrics()" type="submit"/>
+        <input type="submit"/>
       </form>
 
     </div>
