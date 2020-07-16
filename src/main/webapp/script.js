@@ -63,6 +63,10 @@ function createEntryElement(entry) {
   moodElement.setAttribute("class", "entry-mood");
   moodElement.innerText = "Mood Rating: " + entry.moodValue;
 
+  const emojiElement = document.createElement('div');
+  emojiElement.setAttribute("class", "entry-emoji");
+  emojiElement.innerText = "Mood Emoji: " + entry.emoji;
+
   const songElement = document.createElement('div');
   songElement.setAttribute("class", "entry-song");
   songElement.innerText = "Song: " + entry.songTitle + " by " + entry.artistName;
@@ -70,6 +74,7 @@ function createEntryElement(entry) {
   entryElement.appendChild(timestampElement);
   entryElement.appendChild(textElement);
   entryElement.appendChild(moodElement);
+  entryElement.appendChild(emojiElement);
   entryElement.appendChild(songElement);
   entryElement.appendChild(document.createElement('br'));
   
