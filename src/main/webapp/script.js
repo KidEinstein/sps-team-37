@@ -37,11 +37,11 @@ function getLyrics() {
   // Returns lyrics in JSON format
   request.onreadystatechange = function () {
     if (this.readyState === 4) {
-      var lyricsJSON = this.responseText;
+      var lyricsJson = this.responseText;
       // API will return two key values, error (if not found), 
       // or lyrics (if found, but could possibly return empty string)
-      obj = JSON.parse(lyricsJSON);
-      if (obj.lyrics && obj.lyrics != '' && obj.lyrics != null) {
+      obj = JSON.parse(lyricsJson);
+      if (obj.lyrics && (obj.lyrics != '') && (obj.lyrics != null)) {
         // Call function that does sentiment analysis on obj.lyrics string
         document.getElementById("form").submit();
       } else {
