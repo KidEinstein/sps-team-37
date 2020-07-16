@@ -11,8 +11,9 @@ function drawGraph() {
     data.addColumn('string', 'Date');
     data.addColumn('number', 'Mood Rating');
     Object.keys(journalData).forEach((journal) => {
-        var date = new Date(journalData[journal].timestamp).toDateString();
-        data.addRow([date, journalData[journal].moodValue]);
+        var date = new Date(journalData[journal].timestamp);
+        var journalDate = (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear() + "\n" + date.getHours() + ":" + date.getMinutes();
+        data.addRow([journalDate, journalData[journal].moodValue]);
     });
 
     // Additional attributes to update the y-axis. 
