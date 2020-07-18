@@ -72,7 +72,7 @@ public class DataServlet extends HttpServlet {
     String textEntryString = request.getParameter("text");
     String moodScaleString = request.getParameter("mood");
     String songEntryString = request.getParameter("song");
-    String artistEntryString = request.getParameter("artist");
+    String artistEntryString = request.getParameter("artist"); 
     long timestamp = System.currentTimeMillis();
 
     // Ensure that form is filled out before saving to datastore

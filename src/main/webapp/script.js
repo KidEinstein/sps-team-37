@@ -25,7 +25,7 @@ function setup() {
  */
 function addRandomQuote() {
     // Fetch a quote from the QuoteServlet
-    fetch("/quotes").then(request => request.json()).then((quote_data) => {
+    fetch('/quotes').then(request => request.json()).then((quote_data) => {
         var quote = quote_data;
         // Add it to the page.
         const quoteContainer = document.getElementById('quote-container');
@@ -107,4 +107,34 @@ function getTimeAgo(timeInMilli) {
     return Math.floor(months) + " months ago";
   }
   return Math.floor(months / 12) + " years ago";
+}
+
+function getLyrics() {
+  document.getElementById('error-lyric').innerHTML = '';
+  // Gets value from inputs and sets them
+  var artist = document.getElementById('artist').value;
+  var song = document.getElementById('song').value;
+  var request = new XMLHttpRequest();
+  var obj;
+  // Calls lyrics.ovh API
+  request.open('GET', 'https://api.lyrics.ovh/v1/' + artist + '/' + song);
+  // Returns lyrics in JSON format
+  request.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      var lyricsJson = this.responseText;
+      // API will return two key values, error (if not found), 
+      // or lyrics (if found, but could possibly return empty string)
+      obj = JSON.parse(lyricsJson);
+      if (obj.lyrics && (obj.lyrics != '') && (obj.lyrics != null)) {
+        // Call function that does sentiment analysis on obj.lyrics string
+        document.getElementById("form").submit();
+      } else {
+        document.getElementById('error-lyric').innerHTML = 'Could not find song.' + 
+          ' Check spelling, try to submit again, or choose another song.';
+      }
+    }
+  };
+  // Sends the request for lyrics
+  request.send();
+  return false;
 }
