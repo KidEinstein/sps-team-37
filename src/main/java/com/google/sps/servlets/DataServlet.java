@@ -27,6 +27,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.Journal;
+import com.google.sps.data.EmojiSelection;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,10 +67,11 @@ public class DataServlet extends HttpServlet {
         long moodValue = (long) journalEntity.getProperty("mood");
         String songTitle = (String) journalEntity.getProperty("song");
         String artistName = (String) journalEntity.getProperty("artist");
+        String emoji = (String) journalEntity.getProperty("emoji");
         long timestamp = (long) journalEntity.getProperty("timestamp");
         String email = (String) journalEntity.getProperty("email");
 
-        Journal journal = new Journal(textEntry, moodValue, songTitle, artistName, timestamp, email);
+        Journal journal = new Journal(textEntry, moodValue, songTitle, artistName, emoji, timestamp, email);
         journalArrayList.add(journal);
     }
 
@@ -94,7 +96,7 @@ public class DataServlet extends HttpServlet {
     String textEntryString = request.getParameter("text");
     String moodScaleString = request.getParameter("mood");
     String songEntryString = request.getParameter("song");
-    String artistEntryString = request.getParameter("artist");
+    String artistEntryString = request.getParameter("artist"); 
     long timestamp = System.currentTimeMillis();
     String email = currentUser.getEmail();
 
@@ -102,6 +104,8 @@ public class DataServlet extends HttpServlet {
     if (textEntryString != null && !textEntryString.isEmpty()) {
       // Convert the mood input to an int.
       int moodScale = Integer.parseInt(moodScaleString);
+      // Get emoji based on the moodScale
+      String emojiString = EmojiSelection.getEmoji(moodScale);
   
       //Create journal entity with mood, journal entry, and song properties
       Entity journalEntity = new Entity("Journal");
@@ -109,6 +113,7 @@ public class DataServlet extends HttpServlet {
       journalEntity.setProperty("mood", moodScale);
       journalEntity.setProperty("song", songEntryString);
       journalEntity.setProperty("artist", artistEntryString);
+      journalEntity.setProperty("emoji", emojiString);
       journalEntity.setProperty("timestamp", timestamp);
       journalEntity.setProperty("email", email);
 

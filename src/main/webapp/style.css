@@ -9,8 +9,12 @@
 }
 
 #graph-div {
-    width: 50%;
-    height: 100%;
+  overflow-x: auto; 
+  overflow-y: hidden;   
+  width: 80%;
+  min-height: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #title {
