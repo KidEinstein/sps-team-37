@@ -82,7 +82,6 @@ public class DataServlet extends HttpServlet {
     String songEntryString = request.getParameter("song");
     String artistEntryString = request.getParameter("artist"); 
     long timestamp = System.currentTimeMillis();
-    boolean songFound = true;
     String lyrics;
 
     // Calls lyrics API
@@ -95,7 +94,7 @@ public class DataServlet extends HttpServlet {
     lyrics = (String) lyricsObject.get("lyrics").getAsString().replace("\'","");
 
     // Ensure that form is filled out before saving to datastore
-    if (textEntryString != null && !textEntryString.isEmpty() && songFound) {
+    if (textEntryString != null && !textEntryString.isEmpty()) {
       // Convert the mood input to an int.
       int moodScale = Integer.parseInt(moodScaleString);
       // Get emoji based on the moodScale
