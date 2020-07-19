@@ -9,7 +9,10 @@
   <body onload="setup()">
     <div id="content">
 
-      <h1>Our webapp</h1>
+      <h1 id="title">Our webapp</h1>
+      <a id="logout-button">
+        <button>Log Out</button>
+      </a>
       <hr/>
       <p>This is our webapp.</p>
       <p>Click <a href="graphs.html">here</a> to see a graph containing the previous mood data.</p>
@@ -21,13 +24,16 @@
 
       <h3>Journal</h3>
       <hr/>
-      <form action="/my-data-url" method="POST">
+      <form id="form" onSubmit="return getLyrics()" action="/my-data-url" method="POST">
         <p>Enter your journal entry for the day:</p>
         <textarea name="text" maxlength="300" rows="4" cols="50" placeholder="How was your day?" required></textarea>
         <p>Enter a song name</p>
-        <textarea name="song" maxlength="50" rows="1" cols="50" placeholder="Song name" required></textarea>
+        <textarea id="song" name="song" maxlength="50" rows="1" cols="50" placeholder="Song name" required></textarea>
         <p>Enter the artist name</p>
-        <textarea name="artist" maxlength="100" rows="1" cols="50" placeholder="Artist name" required></textarea>
+        <textarea id="artist" name="artist" maxlength="100" rows="1" cols="50" placeholder="Artist name" required></textarea>
+        <p>Enter your mood on a scale from 1-10:</p>
+        <input type="number" name="mood" min="1" max="10" value="1">
+        <p id="error-lyric"></p>
         <br/><br/>
         <input type="submit"/>
       </form>
@@ -35,6 +41,14 @@
       <h3>Past Entries</h3>
       <hr/>
       <div id="past-entries-container"></div>
+
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <a id="login-button">
+            <button>Log in</button>
+          </a>
+        </div>
+      </div>
 
     </div>
   </body>
