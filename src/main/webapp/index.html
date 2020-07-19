@@ -9,7 +9,10 @@
   <body onload="setup()">
     <div id="content">
 
-      <h1>Our webapp</h1>
+      <h1 id="title">Our webapp</h1>
+      <a id="logout-button">
+        <button>Log Out</button>
+      </a>
       <hr/>
       <p>This is our webapp.</p>
       <p>Click <a href="graphs.html">here</a> to see a graph containing the previous mood data.</p>
@@ -38,6 +41,14 @@
       <h3>Past Entries</h3>
       <hr/>
       <div id="past-entries-container"></div>
+
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <a id="login-button">
+            <button>Log in</button>
+          </a>
+        </div>
+      </div>
 
     </div>
   </body>
