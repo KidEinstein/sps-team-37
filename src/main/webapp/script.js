@@ -61,20 +61,24 @@ function createEntryElement(entry) {
 
   const moodElement = document.createElement('div');
   moodElement.setAttribute("class", "entry-mood");
-  moodElement.innerText = "Mood Rating: " + entry.moodValue;
+  moodElement.innerText = "Mood: " + entry.moodValue;
 
   const emojiElement = document.createElement('div');
   emojiElement.setAttribute("class", "entry-emoji");
-  emojiElement.innerText = "Mood Emoji: " + entry.emoji;
+  emojiElement.innerText = " " + entry.emoji;
 
   const songElement = document.createElement('div');
   songElement.setAttribute("class", "entry-song");
   songElement.innerText = "Song: " + entry.songTitle + " by " + entry.artistName;
 
-  entryElement.appendChild(timestampElement);
+  const entryTopElement = document.createElement('div');
+  entryTopElement.setAttribute("class", "entry-top");
+
+  entryTopElement.appendChild(timestampElement);
+  entryTopElement.appendChild(moodElement);
+  entryTopElement.appendChild(emojiElement);
+  entryElement.appendChild(entryTopElement);
   entryElement.appendChild(textElement);
-  entryElement.appendChild(moodElement);
-  entryElement.appendChild(emojiElement);
   entryElement.appendChild(songElement);
   entryElement.appendChild(document.createElement('br'));
   
