@@ -38,7 +38,6 @@ function addRandomQuote() {
  */
 function addPastEntries() {
   fetch('/my-data-url').then(response => response.json()).then((pastEntries) => {
-    console.log(pastEntries);
     // Convert message JSON array to HTML elements then add to page
     const pastEntriesListElement = document.getElementById('past-entries-container');
     for(var i = pastEntries.length-1; i >= 0; i--) {
