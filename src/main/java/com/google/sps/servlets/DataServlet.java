@@ -94,6 +94,7 @@ public class DataServlet extends HttpServlet {
         // Redirects user to another page describing the exception and offering a link back to the main page
         response.setContentType("text/html");
         response.getWriter().println("<div>Exception thrown via Sentiment Analysis API</div>" + "Go back to the main page <a href=/index.html>here</a>");
+        return;
       }
       
       // Get emoji based on the moodScale
