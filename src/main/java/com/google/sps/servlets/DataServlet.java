@@ -87,8 +87,15 @@ public class DataServlet extends HttpServlet {
     // Ensure that form is filled out before saving to datastore
     if (textEntryString != null && !textEntryString.isEmpty()) {
       // Get Sentiment Analysis of Journal Entry
-      int moodScale = analyzeSentimentText(textEntryString);
-
+      int moodScale = 0;
+      try{
+        moodScale = analyzeSentimentText(textEntryString);
+      }catch (Exception e) {
+        // Redirects user to another page describing the exception and offering a link back to the main page
+        response.setContentType("text/html");
+        response.getWriter().println("<div>Exception thrown via Sentiment Analysis API</div>" + "Go back to the main page <a href=/index.html>here</a>");
+      }
+      
       // Get emoji based on the moodScale
       String emojiString = EmojiSelection.getEmoji(moodScale);
 
@@ -109,26 +116,21 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("/index.html");
   }
 
-  /** Identifies the sentiment in the journal text entry string. */
-  public static int analyzeSentimentText(String text){
+  // Identifies the sentiment in the journal text entry string.
+  public static int analyzeSentimentText(String text) throws Exception{
     // Instantiate the Language client com.google.cloud.language.v1.LanguageServiceClient
-    try (LanguageServiceClient language = LanguageServiceClient.create()) {
-      Document doc = Document.newBuilder().setContent(text).setType(Type.PLAIN_TEXT).build();
-      AnalyzeSentimentResponse response = language.analyzeSentiment(doc);
-      Sentiment sentiment = response.getDocumentSentiment();
-      if (sentiment == null) {
-        throw new Exception("Exception: Sentiment is null");
-      }
-      // Convert score ranges from -1.0:1.0 to 1:10 to be compatible with emoji mapping
-      double score = sentiment.getScore() + 1;
-      double oldRange = 2.0;
-      double newRange = 9.0;
-      double newValue = (((score) * newRange) / oldRange) + 1.0;
-      int newScore = (int)Math.round(newValue);
-      return newScore;
-    } catch (Exception e) {
-        e.printStackTrace();
+    Document doc = Document.newBuilder().setContent(text).setType(Type.PLAIN_TEXT).build();
+    LanguageServiceClient languageService = LanguageServiceClient.create();
+    Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+    if (sentiment == null) {
+     throw new Exception("Exception: Sentiment is null");
     }
-    return -1;
+    // Convert score ranges from -1.0:1.0 to 1:10 to be compatible with emoji mapping
+    double score = sentiment.getScore() + 1;
+    double oldRange = 2.0;
+    double newRange = 9.0;
+    double newValue = (((score) * newRange) / oldRange) + 1.0;
+    int newScore = (int)Math.round(newValue);
+    return newScore;
   }
 }
