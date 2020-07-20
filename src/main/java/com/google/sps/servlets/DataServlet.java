@@ -82,7 +82,6 @@ public class DataServlet extends HttpServlet {
     String songEntryString = request.getParameter("song");
     String artistEntryString = request.getParameter("artist"); 
     long timestamp = System.currentTimeMillis();
-    String lyrics;
 
     // Calls lyrics API
     Client client = ClientBuilder.newClient();
@@ -91,7 +90,7 @@ public class DataServlet extends HttpServlet {
       .get();
     JsonElement lyricsElement = new JsonParser().parse(lyricsResponce.readEntity(String.class));
     JsonObject  lyricsObject = lyricsElement.getAsJsonObject();
-    lyrics = (String) lyricsObject.get("lyrics").getAsString().replace("\'","");
+    String lyrics = lyricsObject.get("lyrics").getAsString().replace("\'","");
 
     // Ensure that form is filled out before saving to datastore
     if (textEntryString != null && !textEntryString.isEmpty()) {
