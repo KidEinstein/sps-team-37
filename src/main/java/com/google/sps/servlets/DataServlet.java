@@ -129,16 +129,22 @@ public class DataServlet extends HttpServlet {
     // Ensure that form is filled out before saving to datastore
     if (textEntryString != null && !textEntryString.isEmpty()) {
       // Get Sentiment Analysis of Journal Entry
-      int moodScale = 0;
+      int textMoodScale = 0;
+      int lyricMoodScale = 0;
+
       try {
-        moodScale = analyzeSentimentText(textEntryString);
+        textMoodScale = analyzeSentimentText(textEntryString);
+        lyricMoodScale = analyzeSentimentText(lyrics);
       } catch (Exception e) {
         // Redirects user to another page describing the exception and offering a link back to the main page
         response.setContentType("text/html");
         response.getWriter().println("<div>Exception thrown via Sentiment Analysis API</div>" + "Go back to the main page <a href=/index.html>here</a>");
         return;
       }
-      
+
+      //Calculate the average mood scale between the text and the lyrics
+      int moodScale = (int)Math.round((textMoodScale + lyricMoodScale) / 2);
+
       // Get emoji based on the moodScale
       String emojiString = EmojiSelection.getEmoji(moodScale);
 
