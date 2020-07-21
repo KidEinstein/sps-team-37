@@ -81,7 +81,7 @@ public class DataServlet extends HttpServlet {
         long moodVal = Long.parseLong(moodValue.toString());
 
         // Create new journal object from the entity properties
-        Journal journal = new Journal(textEntry, moodValue, songTitle, artistName, emoji, timestamp, email);
+        Journal journal = new Journal(textEntry, moodVal, songTitle, artistName, emoji, timestamp, email);
         journalArrayList.add(journal);
     }
 
@@ -113,9 +113,9 @@ public class DataServlet extends HttpServlet {
     if (textEntryString != null && !textEntryString.isEmpty()) {
       // Get Sentiment Analysis of Journal Entry
       int moodScale = 0;
-      try{
+      try {
         moodScale = analyzeSentimentText(textEntryString);
-      }catch (Exception e) {
+      } catch (Exception e) {
         // Redirects user to another page describing the exception and offering a link back to the main page
         response.setContentType("text/html");
         response.getWriter().println("<div>Exception thrown via Sentiment Analysis API</div>" + "Go back to the main page <a href=/index.html>here</a>");
