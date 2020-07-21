@@ -143,7 +143,6 @@ function getLyrics() {
       // or lyrics (if found, but could possibly return empty string)
       obj = JSON.parse(lyricsJson);
       if (obj.lyrics && (obj.lyrics != '') && (obj.lyrics != null)) {
-        // Call function that does sentiment analysis on obj.lyrics string
         document.getElementById("form").submit();
       } else {
         document.getElementById('error-lyric').innerHTML = 'Could not find song.' + 

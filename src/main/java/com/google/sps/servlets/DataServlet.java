@@ -32,6 +32,9 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.sps.data.Journal;
 import com.google.sps.data.EmojiSelection;
 
@@ -41,6 +44,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.MediaType;
 
 /** Servlet that stores journal entry data from the html form into Datastore*/
 @WebServlet("/my-data-url")
@@ -108,6 +116,15 @@ public class DataServlet extends HttpServlet {
     String artistEntryString = request.getParameter("artist"); 
     long timestamp = System.currentTimeMillis();
     String email = currentUser.getEmail();
+
+    // Calls lyrics API
+    Client client = ClientBuilder.newClient();
+    Response lyricsResponce = client.target("https://api.lyrics.ovh/v1/" + artistEntryString + "/" + songEntryString)
+      .request(MediaType.TEXT_PLAIN_TYPE)
+      .get();
+    JsonElement lyricsElement = new JsonParser().parse(lyricsResponce.readEntity(String.class));
+    JsonObject  lyricsObject = lyricsElement.getAsJsonObject();
+    String lyrics = lyricsObject.get("lyrics").getAsString().replace("\'","");
 
     // Ensure that form is filled out before saving to datastore
     if (textEntryString != null && !textEntryString.isEmpty()) {
