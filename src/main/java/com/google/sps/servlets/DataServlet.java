@@ -14,6 +14,12 @@
 
 package com.google.sps.servlets;
 
+import com.google.cloud.language.v1.AnalyzeSentimentResponse;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.Document.Type;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -72,14 +78,18 @@ public class DataServlet extends HttpServlet {
     // Loop through the queried results and create a Journal object to add to an ArrayList. 
     for (Entity journalEntity : journalResults.asIterable()) {
         String textEntry = (String) journalEntity.getProperty("text");
-        long moodValue = (long) journalEntity.getProperty("mood");
+        Object moodValue = journalEntity.getProperty("mood");
         String songTitle = (String) journalEntity.getProperty("song");
         String artistName = (String) journalEntity.getProperty("artist");
         String emoji = (String) journalEntity.getProperty("emoji");
         long timestamp = (long) journalEntity.getProperty("timestamp");
         String email = (String) journalEntity.getProperty("email");
 
-        Journal journal = new Journal(textEntry, moodValue, songTitle, artistName, emoji, timestamp, email);
+        // Convert mood value from an object to a long
+        long moodVal = Long.parseLong(moodValue.toString());
+
+        // Create new journal object from the entity properties
+        Journal journal = new Journal(textEntry, moodVal, songTitle, artistName, emoji, timestamp, email);
         journalArrayList.add(journal);
     }
 
@@ -102,7 +112,6 @@ public class DataServlet extends HttpServlet {
 
     // Get the input and time from the form.
     String textEntryString = request.getParameter("text");
-    String moodScaleString = request.getParameter("mood");
     String songEntryString = request.getParameter("song");
     String artistEntryString = request.getParameter("artist"); 
     long timestamp = System.currentTimeMillis();
@@ -119,11 +128,26 @@ public class DataServlet extends HttpServlet {
 
     // Ensure that form is filled out before saving to datastore
     if (textEntryString != null && !textEntryString.isEmpty()) {
-      // Convert the mood input to an int.
-      int moodScale = Integer.parseInt(moodScaleString);
+      // Get Sentiment Analysis of Journal Entry
+      int textMoodScale = 0;
+      int lyricMoodScale = 0;
+
+      try {
+        textMoodScale = analyzeSentimentText(textEntryString);
+        lyricMoodScale = analyzeSentimentText(lyrics);
+      } catch (Exception e) {
+        // Redirects user to another page describing the exception and offering a link back to the main page
+        response.setContentType("text/html");
+        response.getWriter().println("<div>Exception thrown via Sentiment Analysis API</div>" + "Go back to the main page <a href=/index.html>here</a>");
+        return;
+      }
+
+      //Calculate the average mood scale between the text and the lyrics
+      int moodScale = (int)Math.round((textMoodScale + lyricMoodScale) / 2);
+
       // Get emoji based on the moodScale
       String emojiString = EmojiSelection.getEmoji(moodScale);
-  
+
       //Create journal entity with mood, journal entry, and song properties
       Entity journalEntity = new Entity("Journal");
       journalEntity.setProperty("text", textEntryString);
@@ -140,5 +164,23 @@ public class DataServlet extends HttpServlet {
     
     // Redirect back to the HTML page.
     response.sendRedirect("/index.html");
+  }
+
+  // Identifies the sentiment in the journal text entry string.
+  public static int analyzeSentimentText(String text) throws Exception{
+    // Instantiate the Language client com.google.cloud.language.v1.LanguageServiceClient
+    Document doc = Document.newBuilder().setContent(text).setType(Type.PLAIN_TEXT).build();
+    LanguageServiceClient languageService = LanguageServiceClient.create();
+    Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+    if (sentiment == null) {
+     throw new Exception("Exception: Sentiment is null");
+    }
+    // Convert score ranges from -1.0:1.0 to 1:10 to be compatible with emoji mapping
+    double score = sentiment.getScore() + 1;
+    double oldRange = 2.0;
+    double newRange = 9.0;
+    double newValue = (((score) * newRange) / oldRange) + 1.0;
+    int newScore = (int)Math.round(newValue);
+    return newScore;
   }
 }
