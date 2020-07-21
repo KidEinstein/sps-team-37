@@ -17,7 +17,7 @@
  */
 function setup() {
   addRandomQuote();
-  addPastEntries();
+  checkLogin();
 }
 
 /**
@@ -30,6 +30,23 @@ function addRandomQuote() {
         // Add it to the page.
         const quoteContainer = document.getElementById('quote-container');
         quoteContainer.innerText = quote;
+    });
+}
+
+/**
+ * Ensures that the user is logged in before displaying content
+ */
+function checkLogin() {
+  fetch('/login').then((response) => response.json()).then((login) => {
+      // If an email address was not passed in, the user is not logged in
+      if (login.emailAddress == null) {
+        document.getElementById('myModal').style.display = "block";
+        document.getElementById('logout-button').style.display = "none";
+        document.getElementById('login-button').href = login.url;
+      } else { 
+        document.getElementById('logout-button').href = login.url;
+        addPastEntries();
+      }
     });
 }
 
@@ -130,7 +147,6 @@ function getLyrics() {
       // or lyrics (if found, but could possibly return empty string)
       obj = JSON.parse(lyricsJson);
       if (obj.lyrics && (obj.lyrics != '') && (obj.lyrics != null)) {
-        // Call function that does sentiment analysis on obj.lyrics string
         document.getElementById("form").submit();
       } else {
         document.getElementById('error-lyric').innerHTML = 'Could not find song.' + 
